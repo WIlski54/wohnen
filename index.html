@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arbeitsblatt – Informationen aus Texten ermitteln</title>
+  <style>
+    /* ======== CSS Reset & Variablen ======== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Farbschema inspiriert von Architektur und Natur */
+      --primary-color: #2c5f2d;        /* Waldgrün */
+      --secondary-color: #97bc62;      /* Helles Grün */
+      --accent-color: #e4b363;         /* Sandstein/Lehm */
+      --dark-color: #1a1a1a;           /* Fast-Schwarz */
+      --light-bg: #f7f9f6;             /* Sehr helles Grün-Grau */
+      --white: #ffffff;
+      --gray-light: #e8e8e8;
+      --gray-medium: #b0b0b0;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --shadow-hover: rgba(0, 0, 0, 0.15);
+      
+      /* Typografie */
+      --font-main: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      --font-display: 'Georgia', 'Times New Roman', serif;
+    }
+
+    /* ======== Grundlayout ======== */
+    body {
+      font-family: var(--font-main);
+      background: linear-gradient(135deg, var(--light-bg) 0%, #ffffff 100%);
+      min-height: 100vh;
+      line-height: 1.6;
+      color: var(--dark-color);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Dekoratives Hintergrund-Pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, var(--secondary-color) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, var(--accent-color) 0%, transparent 50%);
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* ======== Typografie ======== */
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--primary-color);
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      margin: 2.5rem 0 1.5rem;
+      color: var(--primary-color);
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    h2::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 100%;
+      background: var(--accent-color);
+      border-radius: 2px;
+    }
+
+    /* ======== Landingpage ======== */
+    #landing {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 10px 30px var(--shadow);
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #landing::before {
+      content: '🏠';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      font-size: 150px;
+      opacity: 0.05;
+      transform: rotate(-15deg);
+    }
+
+    #landing h2 {
+      color: var(--primary-color);
+      margin-top: 0;
+      padding-left: 0;
+    }
+
+    #landing h2::before {
+      display: none;
+    }
+
+    #landing ul {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+
+    #landing ul li {
+      padding: 0.75rem 0;
+      padding-left: 2rem;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+
+    #landing ul li:hover {
+      transform: translateX(5px);
+    }
+
+    #landing ul li::before {
+      content: '▶';
+      position: absolute;
+      left: 0;
+      color: var(--accent-color);
+      font-size: 0.8rem;
+    }
+
+    /* ======== Formulare & Eingaben ======== */
+    label {
+      font-weight: 600;
+      color: var(--primary-color);
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"] {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-light);
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: var(--white);
+      width: 280px;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 0 3px rgba(151, 188, 98, 0.2);
+    }
+
+    .cell-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.5rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .cell-input:focus {
+      background-color: rgba(151, 188, 98, 0.1);
+      outline: 2px solid var(--secondary-color);
+      outline-offset: -2px;
+      border-radius: 4px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--gray-light);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 150px;
+      transition: all 0.3s ease;
+      background: var(--white);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 0 3px rgba(151, 188, 98, 0.2);
+    }
+
+    /* ======== Buttons ======== */
+    button {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px var(--shadow);
+      position: relative;
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--shadow-hover);
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #pdfBtn {
+      background: linear-gradient(135deg, var(--accent-color), #d4a052);
+      margin-left: 1rem;
+    }
+
+    /* ======== Kontrollbereich ======== */
+    #controlPanel {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px var(--shadow);
+      margin: 2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ======== Einführungstext ======== */
+    #intro {
+      background: linear-gradient(135deg, rgba(151, 188, 98, 0.1), rgba(228, 179, 99, 0.1));
+      padding: 1.5rem;
+      border-radius: 15px;
+      border-left: 4px solid var(--accent-color);
+      margin: 2rem 0;
+    }
+
+    /* ======== Aufgabenpakete ======== */
+    .task-section {
+      background: var(--white);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px var(--shadow);
+      margin: 2rem 0;
+      animation: fadeIn 0.5s ease-out;
+      position: relative;
+    }
+
+    /* ======== Dekoratives Bild ======== */
+    .world-houses-image {
+      width: 100%;
+      max-width: 600px;
+      margin: 2rem auto;
+      display: block;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      opacity: 0.9;
+    }
+
+    .image-container {
+      text-align: center;
+      margin: 2rem 0;
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba(151, 188, 98, 0.05), rgba(228, 179, 99, 0.05));
+      border-radius: 20px;
+    }
+
+    .image-caption {
+      margin-top: 1rem;
+      font-style: italic;
+      color: var(--accent-color);
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .task-section p {
+      margin: 1rem 0;
+      text-align: justify;
+    }
+
+    .task-section em {
+      color: var(--accent-color);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .task-section ol {
+      margin: 1.5rem 0;
+      padding-left: 2rem;
+    }
+
+    .task-section ol li {
+      margin: 0.75rem 0;
+      position: relative;
+    }
+
+    /* ======== Tabellen ======== */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 2rem 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 15px var(--shadow);
+    }
+
+    th {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--white);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      background: var(--white);
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--gray-light);
+      border-right: 1px solid var(--gray-light);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    td:last-child {
+      border-right: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(151, 188, 98, 0.05);
+    }
+
+    /* ======== Responsive Design ======== */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      #landing {
+        padding: 2rem 1.5rem;
+      }
+      
+      input[type="text"] {
+        width: 100%;
+      }
+      
+      #controlPanel {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      #pdfBtn {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+      
+      table {
+        font-size: 0.875rem;
+      }
+      
+      th, td {
+        padding: 0.5rem;
+      }
+    }
+
+    /* ======== Druckansicht ======== */
+    @media print {
+      body {
+        background: white;
+      }
+      
+      body::before {
+        display: none;
+      }
+      
+      #landing,
+      #controlPanel,
+      #intro {
+        display: none !important;
+      }
+      
+      .task-section {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        margin: 1rem 0;
+      }
+      
+      .task-section:not(.printable) {
+        display: none !important;
+      }
+      
+      button {
+        display: none !important;
+      }
+    }
+
+    /* ======== Sichtbarkeit ======== */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="mainHeading">Wohnen in verschiedenen Ländern</h1>
+
+    <!-- ======= Landingpage für Kollegium ======= -->
+    <section id="landing">
+      <h2>Information für Kolleginnen und Kollegen</h2>
+      <p>
+        Dieses interaktive Arbeitsblatt demonstriert eine einfache Möglichkeit,
+        Lernenden automatisch differenzierte Aufgaben bereitzustellen. Nach dem
+        Öffnen geben die Schülerinnen und Schüler <strong>ihren Namen</strong> in
+        das Feld ein. <br />
+        Entscheidend ist dabei <strong>der erste Buchstabe</strong>:
+      </p>
+      <ul>
+        <li><strong>A</strong> → Aufgabenpaket&nbsp;A (Grundniveau, inklusionsgerecht)</li>
+        <li><strong>B</strong> → Aufgabenpaket&nbsp;B (Aufbauniveau, G‑Kurs)</li>
+        <li><strong>C</strong> → Aufgabenpaket&nbsp;C (Erweiterungsniveau, E‑Kurs)</li>
+      </ul>
+      <p>
+        Die übrigen Pakete bleiben ausgeblendet. Ein Klick auf
+        <em>„Als&nbsp;PDF&nbsp;exportieren"</em> erzeugt anschließend eine
+        druckfertige PDF mit genau dem aktuell sichtbaren Paket. So lassen sich
+        personalisierte Ausdrucke schnell generieren. <strong>Nach dem Speichern
+        laden die Schülerinnen und Schüler ihre PDF‑Datei in IServ oder Taskcards
+        hoch, sodass Sie für jede Lernende und jeden Lernenden eine saubere
+        digitale Version zur Korrektur haben.</strong>
+      </p>
+      <p>
+        Klicke auf „Arbeitsblatt anzeigen", um die Schüleransicht zu testen.
+      </p>
+      <button id="startBtn">Arbeitsblatt anzeigen</button>
+    </section>
+
+    <!-- ======= Kontrollbereich ======= -->
+    <div id="controlPanel" class="hidden">
+      <label for="nameField">Vorname:</label>
+      <input id="nameField" type="text" placeholder="Dein Vorname" />
+      <button id="pdfBtn">Als PDF exportieren</button>
+    </div>
+
+    <!-- Gemeinsamer Einführungstext für Lernende -->
+    <div id="intro" class="hidden">
+      <p>
+        <strong>Einführung – So arbeitest du mit diesem Blatt:</strong><br />
+        In den folgenden Aufgaben geht es darum, aus Sachtexten gezielt Informationen
+        herauszufiltern. Gib zunächst deinen Vornamen in das Feld oben ein.
+      </p>
+    </div>
+
+    <!-- ==================== Aufgabenpaket A ==================== -->
+    <section id="tasksA" class="task-section hidden">
+      <h2>Wohnformen rund um die Welt</h2>
+      <p><em>So wohnen Menschen in verschiedenen Ländern</em></p>
+      
+      <div class="image-container">
+        <img src="wohnen.png" alt="Verschiedene Wohnformen aus aller Welt" class="world-houses-image" />
+        <p class="image-caption">Häuser aus verschiedenen Kulturen zeigen die Vielfalt des Wohnens</p>
+      </div>
+      
+      <p>
+        Menschen wohnen überall auf der Welt. Ganz im Norden, in Grönland, leben
+        die Inuit. Früher bauten sie Iglus aus Schneeblöcken. Die Indianer in
+        Nordamerika schliefen in Tipis aus Tierhäuten. In der Mongolei wohnen
+        Nomaden in runden Zelten, den Jurten. In Europa leben die meisten Menschen
+        in Steinhäusern. In Afrika werden viele Häuser aus Lehm gebaut. In Japan
+        haben Holzhäuser Wände aus Papier. Heute findet man auf der ganzen Welt
+        auch Hochhäuser aus Beton.
+      </p>
+      <ol>
+        <li>Lies den Text aufmerksam und <strong>unterstreiche</strong> die Ländernamen.</li>
+        <li>Trage die Informationen in die Felder der Tabelle unten ein.</li>
+      </ol>
+      <table>
+        <thead>
+          <tr>
+            <th>Land / Region</th>
+            <th>Bewohner / -gruppe</th>
+            <th>Typische Behausung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ==================== Aufgabenpaket B ==================== -->
+    <section id="tasksB" class="task-section hidden">
+      <h2>Bauen und Wohnen im Einklang mit der Natur</h2>
+      <p><em>Wie Klima und Materialien unsere Häuser prägen</em></p>
+      
+      <div class="image-container">
+        <img src="wohnen2.png" alt="Verschiedene Wohnformen aus aller Welt" class="world-houses-image" />
+        <p class="image-caption">Traditionelle Bauweisen passen sich an ihre Umgebung an</p>
+      </div>
+      
+      <p>
+        Die Art, wie Menschen ihre Häuser bauen, hängt stark von Klima und
+        verfügbaren Materialien ab. Auf Grönland errichteten die Inuit einst Iglus
+        aus fest zusammengepresstem Schnee – hervorragende Isolatoren bei trockner
+        Kälte. Heute leben viele Inuit in Holzhäusern, die per Frachtschiff
+        geliefert werden. Über die weiten Grasländer Zentralasiens ziehen seit
+        Jahrhunderten Nomaden. Ihre runde Filzjurte lässt sich in wenigen Stunden
+        ab‑ und wieder aufbauen. Prairieindianer Nordamerikas nutzten Tipis aus
+        Büffelhäuten, um den Herden folgen zu können. In tropischen Regionen
+        Afrikas formen Lehmziegel aus getrocknetem Schlamm kühle Wände, solange
+        sie nicht durchnässt sind. Europäische Städte entwickelten massive Stein- und
+        Ziegelbauten, während in ostasiatischen Ländern wie Japan Holzhäuser mit
+        leichten Papierwänden entstehen, die bei Erdbeben nachgeben. Moderne
+        Baustoffe wie Stahl und Beton ermöglichen heute Wolkenkratzer nahezu in
+        jedem Klima.
+      </p>
+      <ol>
+        <li>Markiere alle Wörter, die ein <strong>Baumaterial</strong> bezeichnen.</li>
+        <li>Übertrage die wichtigsten Informationen in die Tabelle.</li>
+      </ol>
+      <table>
+        <thead>
+          <tr>
+            <th>Region / Klima</th>
+            <th>Traditionelle Bauweise</th>
+            <th>Verwendete Materialien</th>
+            <th>Besondere Eigenschaften</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ==================== Aufgabenpaket C ==================== -->
+    <section id="tasksC" class="task-section hidden">
+      <h2>Architektur als Antwort auf Umweltbedingungen</h2>
+      <p><em>Traditionelle Bauweisen und ihre physikalischen Prinzipien</em></p>
+      
+      <div class="image-container">
+        <img src="wohnen3.png" alt="Verschiedene Wohnformen aus aller Welt" class="world-houses-image" />
+        <p class="image-caption">Architektur als intelligente Anpassung an lokale Bedingungen</p>
+      </div>
+      
+      <p>
+        Architektonische Lösungen reflektieren stets das komplexe Zusammenspiel
+        zwischen klimatischen Bedingungen, verfügbaren Ressourcen und kulturellen
+        Traditionen. In der Arktis entwickelten die Inuit mit dem Iglu eine
+        geniale Konstruktion: Die Kuppelform minimiert die Angriffsfläche für
+        Stürme, während die Schneewände durch ihre isolierenden Lufteinschlüsse
+        Innentemperaturen von 0°C ermöglichen – bei Außentemperaturen von -45°C.
+        Die mongolische Jurte verkörpert dagegen Mobilität: Ihr Holzgerüst kann
+        binnen zwei Stunden demontiert werden, während die mehrlagige Filzabdeckung
+        sowohl gegen Sommerhitze als auch Winterkälte schützt. Nordamerikanische
+        Prärieindianer perfektionierten mit dem kegelförmigen Tipi eine windstabile,
+        transportable Behausung mit raffinierter Belüftung durch verstellbare
+        Rauchklappen. In Subsahara-Afrika nutzen traditionelle Baumeister die
+        thermische Masse von Lehmziegeln: Tagsüber absorbieren die dicken Wände
+        Hitze, nachts geben sie Wärme ab – eine passive Klimatisierung. Japanische
+        Architekten entwickelten flexible Raumkonzepte mit verschiebbaren
+        Papierwänden (Shoji), die Erdbebenschäden minimieren. Die industrielle
+        Revolution brachte Stahl und Stahlbeton, was Wolkenkratzer ermöglichte –
+        doch moderne Architektur besinnt sich zunehmend auf nachhaltige,
+        ortsangepasste Bauweisen.
+      </p>
+      <ol>
+        <li>Analysiere die <strong>klimatischen Herausforderungen</strong> und die entsprechenden <strong>baulichen Lösungen</strong> für jede Region.</li>
+        <li>Erstelle eine strukturierte Übersicht in der Tabelle.</li>
+        <li>Erkläre in einem kurzen Text (5-7 Sätze), warum moderne Architektur sich wieder traditionellen Bauweisen zuwendet.</li>
+      </ol>
+      <table>
+        <thead>
+          <tr>
+            <th>Region</th>
+            <th>Klimatische Herausforderung</th>
+            <th>Bauliche Lösung</th>
+            <th>Physikalisches / technisches Prinzip</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+          <tr><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td><td><input class="cell-input" /></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Reflexionsaufgabe:</strong></p>
+      <textarea placeholder="Erkläre hier, warum moderne Architektur sich wieder traditionellen Bauweisen zuwendet..."></textarea>
+    </section>
+  </div>
+
+  <script>
+    // Referenzen zu wichtigen Elementen
+    const landing = document.getElementById('landing');
+    const startBtn = document.getElementById('startBtn');
+    const controlPanel = document.getElementById('controlPanel');
+    const nameField = document.getElementById('nameField');
+    const pdfBtn = document.getElementById('pdfBtn');
+    const intro = document.getElementById('intro');
+    const mainHeading = document.getElementById('mainHeading');
+    
+    // Alle Aufgabenpakete
+    const tasksA = document.getElementById('tasksA');
+    const tasksB = document.getElementById('tasksB');
+    const tasksC = document.getElementById('tasksC');
+
+    // Event Listener für "Arbeitsblatt anzeigen" Button
+    startBtn.addEventListener('click', function() {
+      // Landingpage ausblenden
+      landing.classList.add('hidden');
+      // Kontrollbereich und Intro einblenden
+      controlPanel.classList.remove('hidden');
+      intro.classList.remove('hidden');
+      // Fokus auf Namensfeld setzen
+      nameField.focus();
+    });
+
+    // Event Listener für Namenseingabe
+    nameField.addEventListener('input', function() {
+      const name = nameField.value.trim();
+      
+      // Alle Aufgabenpakete zunächst ausblenden
+      tasksA.classList.add('hidden');
+      tasksB.classList.add('hidden');
+      tasksC.classList.add('hidden');
+      
+      if (name.length > 0) {
+        const firstLetter = name.charAt(0).toUpperCase();
+        
+        // Je nach Anfangsbuchstabe das entsprechende Paket anzeigen
+        switch(firstLetter) {
+          case 'A':
+            tasksA.classList.remove('hidden');
+            break;
+          case 'B':
+            tasksB.classList.remove('hidden');
+            break;
+          case 'C':
+            tasksC.classList.remove('hidden');
+            break;
+          default:
+            // Für alle anderen Buchstaben: Standardmäßig Paket B
+            tasksB.classList.remove('hidden');
+        }
+      }
+    });
+
+    // Event Listener für PDF-Export
+    pdfBtn.addEventListener('click', function() {
+      // Klassen für Druckansicht setzen
+      mainHeading.classList.add('printable');
+      
+      // Sichtbares Aufgabenpaket für Druck markieren
+      if (!tasksA.classList.contains('hidden')) {
+        tasksA.classList.add('printable');
+      } else if (!tasksB.classList.contains('hidden')) {
+        tasksB.classList.add('printable');
+      } else if (!tasksC.classList.contains('hidden')) {
+        tasksC.classList.add('printable');
+      }
+      
+      // Druckdialog öffnen
+      window.print();
+      
+      // Nach dem Drucken die Klassen wieder entfernen
+      setTimeout(function() {
+        mainHeading.classList.remove('printable');
+        tasksA.classList.remove('printable');
+        tasksB.classList.remove('printable');
+        tasksC.classList.remove('printable');
+      }, 100);
+    });
+  </script>
+</body>
+</html>
